@@ -10,7 +10,7 @@ export class StarComponent implements OnInit, OnChanges {
   rating: number;
   startWidth: number;
 
-  @Output
+  @Output()
   ratingClicked: EventEmitter< string > = new EventEmitter<string>()
 
   constructor() {
@@ -23,7 +23,8 @@ export class StarComponent implements OnInit, OnChanges {
     this.startWidth = this.rating * 75 / 5;
   }
 
-  functionOnClick() {
+  functionOnClick(): void {
     this.ratingClicked.emit( '' + new Date() );
+
   }
 }
