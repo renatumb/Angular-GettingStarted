@@ -90,4 +90,8 @@ export class ProductListComponent implements OnInit {
   toggleImage() {
     this.showImage = !this.showImage;
   }
+
+  productListLister($event: string) {
+    this.pageTitle = $event;
+  }
 }
