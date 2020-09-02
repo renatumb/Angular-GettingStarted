@@ -14,14 +14,15 @@ export class ProductListComponent implements OnInit {
   showImage: boolean;
 
   __listFilter01 = '';
+  private errorMessage: any;
 
   get listFilter01(): string {
-    console.log( 'get ' + new Date());
+    //console.log( 'get ' + new Date());
     return this.__listFilter01;
   }
 
   set listFilter01(value: string) {
-    console.log('set ' + new Date());
+  //  console.log('set ' + new Date());
     this.__listFilter01 = value;
     this.filteredProducts = this.products.filter( (element: IProduct ) => {
         return element.productName.toLowerCase().indexOf( this.listFilter01.toLowerCase() ) > -1;
@@ -34,8 +35,15 @@ export class ProductListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.products = this._productDataServiceService.getProducts();
-    this.listFilter01 = this.__listFilter01;
+    this._productDataServiceService.getProducts().subscribe({
+      next: p => {
+        this.products = p;
+        this.listFilter01 = this.__listFilter01;
+      },
+      error: e => {
+        this.errorMessage = e;
+      }
+    });
   }
 
   toggleImage() {
