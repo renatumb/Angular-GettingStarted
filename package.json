@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "stat": "npx webpack-bundle-analyzer dist/Angular-GettingStarted/stats-es2015.json",
-    "source-map" : " npx source-map-explorer dist/Angular-GettingStarted/main-es5.js"
+    "source-map": " npx source-map-explorer dist/Angular-GettingStarted/main-es5.js"
   },
   "private": true,
   "dependencies": {

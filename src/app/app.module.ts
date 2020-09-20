@@ -7,11 +7,13 @@ import {FormsModule} from '@angular/forms';
 import { WelcomeComponent } from './home/welcome/welcome.component';
 import {RouterModule} from '@angular/router';
 import { ProductModule } from './products/product.module';
+import { ProductEditComponent } from './product-edit/product-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    ProductEditComponent
   ],
   imports: [
     BrowserModule,
