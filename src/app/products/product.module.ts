@@ -6,13 +6,15 @@ import {RouterModule} from '@angular/router';
 import {ProductDetailGuard} from './product-detail.guard';
 import { SharedModule } from '../shared/shared.module';
 import {ProductEditComponent} from './product-edit/product-edit.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 
 @NgModule({
   declarations: [
     ProductListComponent,
-    ProductDetailComponent
+    ProductDetailComponent,
+    ProductEditComponent
   ],
   imports: [
     RouterModule.forChild([
@@ -20,7 +22,8 @@ import {ProductEditComponent} from './product-edit/product-edit.component';
       {path: 'products/:id', component: ProductDetailComponent, canActivate: [ProductDetailGuard]},
       {path: 'products/:id/edit', component: ProductEditComponent}
     ]),
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule,
   ]
 })
 export class ProductModule {
