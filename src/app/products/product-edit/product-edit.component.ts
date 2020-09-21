@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProductDataServiceService} from '../../services/product-data-service.service';
 import {IProduct} from '../product';
-import { FormBuilder, FormGroup, FormControl, FormArray, Validators, FormControlName } from '@angular/forms';
+import {FormBuilder, FormGroup, FormControl, FormArray, Validators, FormControlName, ValidatorFn, AbstractControl} from '@angular/forms';
+import {ValidateFn} from 'codelyzer/walkerFactory/walkerFn';
 
 @Component({
   selector: 'app-product-edit',
@@ -16,6 +17,16 @@ export class ProductEditComponent implements OnInit {
   pageTitle: string;
   productFormGroup: FormGroup; // Variable that links html form with object in the component code
 
+  validationMessages: { [key: string]: { [key: string]: string } } = {
+    productName: {
+                    required: 'Product name is required.',
+                    minlength: 'Product name must be at least three characters.',
+                    maxlength: 'Product name cannot exceed 50 characters.'},
+    productCode: {
+                    required: 'Product code is required.'},
+    starRating: {
+                    range: 'Rate the product between 1 (lowest) and 5 (highest).'}
+  };
 
   constructor( private activateRoute: ActivatedRoute,
                private productDataServiceService: ProductDataServiceService,
@@ -29,9 +40,9 @@ export class ProductEditComponent implements OnInit {
     this.productFormGroup = this.formBuilder.group({
       productName: ['', [Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(50)]],
+        Validators.maxLength(30)]],
       productCode: ['', Validators.required],
-      starRating: '5',
+      starRating: ['5', this.customizedRangeValidator(1,5) ],
       tagsxx: this.formBuilder.array([]),
       description: ''
     });
@@ -83,4 +94,15 @@ export class ProductEditComponent implements OnInit {
   get tags(): FormArray {
     return this.productFormGroup.get('tagsxx') as FormArray;
 }
+
+  private customizedRangeValidator(min: number, max: number): ValidatorFn {
+
+    return (c: AbstractControl): { [key: string]: boolean } | null => {
+      if (c.value && (isNaN(c.value) || c.value < min || c.value > max)) {
+        return { customizedOutOFRange: true };
+      }
+      return null;
+    };
+
+  }
 }

@@ -17,9 +17,11 @@
                  type="text"
                  placeholder="Name (required)"
                  formControlName="productName"
-                 />
+                 [ngClass]="{'is-invalid': this.productFormGroup.get('productName').invalid }" />
           <span class="invalid-feedback">
-
+                  <span *ngIf="this.productFormGroup.get('productName').errors?.required" >{{this.validationMessages.productName.required}}</span>
+                  <span *ngIf="this.productFormGroup.get('productName').errors?.minlength" >{{this.validationMessages.productName.minlength}}</span>
+                  <span *ngIf="this.productFormGroup.get('productName').errors?.maxlength" >{{this.validationMessages.productName.maxlength}}</span>
           </span>
         </div>
       </div>
@@ -33,9 +35,10 @@
                  type="text"
                  placeholder="Code (required)"
                  formControlName="productCode"
-            />
-          <span class="invalid-feedback">
+                 [ngClass]="{'is-invalid': this.productFormGroup.get('productCode').invalid }" />
 
+          <span class="invalid-feedback">
+                <span *ngIf="this.productFormGroup.get('productCode').errors?.required" >{{this.validationMessages.productCode.required}}</span>
           </span>
         </div>
       </div>
@@ -50,9 +53,9 @@
                  type="text"
                  placeholder="Rating (1-5)"
                  formControlName="starRating"
-                  />
+                 [ngClass]="{'is-invalid': this.productFormGroup.get('starRating').invalid }" />
           <span class="invalid-feedback">
-
+                <span *ngIf="this.productFormGroup.get('starRating').errors?.customizedOutOFRange" >{{this.validationMessages.starRating.range}}</span>
           </span>
         </div>
       </div>
@@ -133,7 +136,6 @@
     </form>
   </div>
 
-  <div class="alert alert-danger"
-        >
+  <div class="alert alert-danger">
   </div>
 </div>
