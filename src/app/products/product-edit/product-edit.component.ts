@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProductDataServiceService} from '../../services/product-data-service.service';
 import {IProduct} from '../product';
-import {FormBuilder, FormGroup, FormControl, FormArray, Validators, FormControlName, ValidatorFn, AbstractControl} from '@angular/forms';
-import {ValidateFn} from 'codelyzer/walkerFactory/walkerFn';
+import {FormBuilder, FormGroup, FormControl, FormArray, Validators, ValidatorFn, AbstractControl} from '@angular/forms';
 
 @Component({
   selector: 'app-product-edit',
@@ -21,12 +20,13 @@ export class ProductEditComponent implements OnInit {
     productName: {
                     required: 'Product name is required.',
                     minlength: 'Product name must be at least three characters.',
-                    maxlength: 'Product name cannot exceed 50 characters.'},
+                    maxlength: 'Product name cannot exceed 30 characters.'},
     productCode: {
                     required: 'Product code is required.'},
     starRating: {
                     range: 'Rate the product between 1 (lowest) and 5 (highest).'}
   };
+  errorMessage: any;
 
   constructor( private activateRoute: ActivatedRoute,
                private productDataServiceService: ProductDataServiceService,
@@ -35,26 +35,32 @@ export class ProductEditComponent implements OnInit {
 
 
   ngOnInit(): void {
-    let resultFilter: IProduct[];
 
     this.productFormGroup = this.formBuilder.group({
       productName: ['', [Validators.required,
         Validators.minLength(3),
         Validators.maxLength(30)]],
       productCode: ['', Validators.required],
-      starRating: ['5', this.customizedRangeValidator(1,5) ],
+      starRating: ['5', this.customizedRangeValidator(1, 5) ],
       tagsxx: this.formBuilder.array([]),
       description: ''
     });
     // ------------
 
-    this.activateRoute.paramMap.subscribe(
-      value => this.productID = +value.get('id')
-    );
+    this.activateRoute.paramMap.subscribe({
+      next: value => {
+        this.productID = +value.get('id');
+        this.loadProduct(this.productID);
+      }, error: err => this.errorMessage = err
+    });
+  }
 
-    this.productDataServiceService.getProducts().subscribe(
-      allProducts => {
-        resultFilter = allProducts.filter((one) => one.productId + '' === '' + this.productID);
+  loadProduct(ID: number): void {
+    let resultFilter: IProduct[];
+
+    this.productDataServiceService.getProducts().subscribe({
+      next: allProducts => {
+        resultFilter = allProducts.filter((one) => one.productId + '' === '' + ID);
 
         if (resultFilter.length > 0) {
           this.product = resultFilter[0];
@@ -63,7 +69,6 @@ export class ProductEditComponent implements OnInit {
           this.product = {} as IProduct;
           this.pageTitle = 'Add Product';
         }
-
         // updating the form fields with Object retrieved fields
         this.productFormGroup.patchValue({
             productName: this.product.productName,
@@ -72,9 +77,9 @@ export class ProductEditComponent implements OnInit {
             description: this.product.description
           }
         );
-      });
+      }, error: err => this.errorMessage = err
+    });
   }
-
 
   saveProduct() {
 
@@ -85,7 +90,8 @@ export class ProductEditComponent implements OnInit {
   }
 
   deleteTag(i: number) {
-
+    this.tags.removeAt(i);
+    this.tags.markAsDirty();
   }
 
   addTag() {
