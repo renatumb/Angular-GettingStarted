@@ -32,7 +32,7 @@ export class ProductEditComponent implements OnInit {
         Validators.maxLength(50)]],
       productCode: ['', Validators.required],
       starRating: '5',
-      tags: this.formBuilder.array([]),
+      tagsxx: this.formBuilder.array([]),
       description: ''
     });
     // ------------
@@ -72,4 +72,15 @@ export class ProductEditComponent implements OnInit {
   deleteProduct() {
 
   }
+
+  deleteTag(i: number) {
+
+  }
+
+  addTag() {
+    this.tags.push(new FormControl() );
+  }
+  get tags(): FormArray {
+    return this.productFormGroup.get('tagsxx') as FormArray;
+}
 }
